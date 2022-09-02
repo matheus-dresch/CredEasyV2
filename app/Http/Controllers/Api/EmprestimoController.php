@@ -3,23 +3,48 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Emprestimo;
+use App\Services\EmprestimoService;
 use App\Traits\ApiResponse;
-use Illuminate\Http\Request;
 
 class EmprestimoController extends Controller
 {
     use ApiResponse;
 
-    public function lista()
+    public function __construct(
+        private EmprestimoService $service
+    )
     {
-        $emprestimos = Emprestimo::all();
+
+    }
+
+    public function listaEmprestimos()
+    {
+        $emprestimos = $this->service->getTodosEmprestimos();
 
         return $this->respostaSucesso(['emprestimos' => $emprestimos]);
     }
 
-    public function detalha(int $id)
+    public function detalhaEmprestimo(int $id)
     {
-        return Emprestimo::find($id);
+        $emprestimo = $this->service->getEmprestimo($id);
+
+        return $this->respostaSucesso(['emprestimo' => $emprestimo]);
+    }
+
+    public function parcelasEmprestimo(int $id)
+    {
+        $parcelas = $this->service->getParcelasEmprestimo($id);
+
+        return $this->respostaSucesso(['parcelas' => $parcelas]);
+    }
+
+    public function registraEmprestimos()
+    {
+        //
+    }
+
+    public function atualizaEmprestimo()
+    {
+        //
     }
 }

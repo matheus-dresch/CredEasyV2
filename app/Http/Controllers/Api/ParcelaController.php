@@ -9,4 +9,9 @@ use Illuminate\Http\Request;
 class ParcelaController extends Controller
 {
     use ApiResponse;
+
+    public function pagaParcela()
+    {
+        //
+    }
 }

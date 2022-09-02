@@ -16,6 +16,18 @@ class Cliente extends Model implements Authenticatable
 
     protected $hidden = ['senha', 'emprestimos'];
 
+    protected $fillable = [
+        'cpf',
+        'nome',
+        'numero_celular',
+        'endereco',
+        'profissao',
+        'renda',
+        'email',
+        'senha',
+        'tipo'
+    ];
+
     public function emprestimos()
     {
         return $this->hasMany(Emprestimo::class);
@@ -49,5 +61,18 @@ class Cliente extends Model implements Authenticatable
     public function getRememberTokenName()
     {
         return '';
+    }
+
+    public function proximaParcela()
+    {
+        $parcela = Parcela::select('parcela.emprestimo_id', 'parcela.data_vencimento', 'parcela.valor')
+            ->join('emprestimo', 'parcela.emprestimo_id', 'emprestimo.id')
+            ->where('cliente_id', $this->id)
+            ->where('parcela.status', '!=', 'PAGA')
+            ->orderBy('parcela.data_vencimento')
+            ->limit(1)
+            ->first();
+
+        return $parcela;
     }
 }
