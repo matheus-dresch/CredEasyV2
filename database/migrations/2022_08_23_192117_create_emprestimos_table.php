@@ -20,7 +20,7 @@ return new class extends Migration
 
             $table->string('valor', 32);
             $table->string('valor_final', 32);
-            $table->float('taxa_juros', 10, 2, true)->default(1);
+            $table->float('taxa_juros', 10, 3, true)->default(1.1);
             $table->integer('qtd_parcelas');
             $table->string('status', 32)->default('SOLICITADO');
 
