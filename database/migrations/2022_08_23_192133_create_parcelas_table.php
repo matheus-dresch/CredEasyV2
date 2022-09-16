@@ -18,8 +18,8 @@ return new class extends Migration
 
             $table->float('valor', 10, 2, true);
             $table->integer('numero');
-            $table->float('taxa_multa');
-            $table->float('valor_pago');
+            $table->float('taxa_multa', 10, 3)->default(1);
+            $table->float('valor_pago', 10, 2)->nullable();
 
             $table->dateTime('data_vencimento');
             $table->dateTime('data_pagamento')->nullable();
