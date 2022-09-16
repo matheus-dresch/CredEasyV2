@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use App\Traits\ApiResponse;
+use DomainException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
@@ -58,7 +59,16 @@ class Handler extends ExceptionHandler
         });
 
         $this->renderable(function (NotFoundHttpException $err, $request) {
-            return $this->respostaErro($err->getMessage(), 404);
+            return $this->respostaErro($err->getMessage() ?: 'Este recurso é inexistente', 404);
         });
+
+        $this->renderable(function (DomainException $err, $request) {
+            return $this->respostaErro($err->getMessage(), 422);
+        });
+
+        // $this->renderable(function (Throwable $err, $request) {
+        //     return $this->respostaErro($err->getMessage(), 500, [ 'erro' => $err->getPrevious() ]);
+        // });
+
     }
 }

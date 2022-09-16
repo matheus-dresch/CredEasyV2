@@ -33,7 +33,8 @@ class LoginController extends Controller
 
         return $this->respostaSucesso([
             'token' => $token,
-            'id' => $cliente->id
+            'id' => $cliente->id,
+            'gestor' => $cliente->tipo === 'GESTOR'
         ], 'Login efetuado com sucesso');
     }
 }

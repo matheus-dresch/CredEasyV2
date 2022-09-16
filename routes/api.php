@@ -26,18 +26,17 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('clientes/{id}', [ClienteController::class, 'detalhaCliente']);
         Route::get('clientes/{id}/emprestimos', [ClienteController::class, 'emprestimosCliente']);
 
-        Route::patch('emprestimos/{id}', [EmprestimoController::class, 'atualiza']);
+        Route::patch('emprestimos/{id}', [EmprestimoController::class, 'atualizaEmprestimo']);
     });
 
     Route::get('emprestimos', [EmprestimoController::class, 'listaEmprestimos']);
     Route::get('emprestimos/{id}', [EmprestimoController::class, 'detalhaEmprestimo']);
     Route::get('emprestimos/{id}/parcelas', [EmprestimoController::class, 'parcelasEmprestimo']);
+    Route::post('emprestimos', [EmprestimoController::class, 'registraEmprestimo']);
+    Route::delete('emprestimos/{id}', [EmprestimoController::class, 'cancelaEmprestimo']);
 
     Route::get('parcelas/{id}', [ParcelaController::class, 'detalhaParcela']);
-
-    Route::post('emprestimos', [ClienteController::class, 'registraEmprestimo']);
-
-    Route::patch('parcelas/{id}', [ClienteController::class, 'pagaParcela']);
+    Route::patch('parcelas/{id}', [ParcelaController::class, 'pagaParcela']);
 });
 
 Route::post('clientes', [ClienteController::class, 'registraCliente']);

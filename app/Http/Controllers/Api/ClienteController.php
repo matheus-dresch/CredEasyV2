@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\RegistroClienteRequest;
 use App\Http\Resources\ClienteResource;
 use App\Models\Cliente;
+use App\Models\Parcela;
 use App\Services\ClienteService;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;

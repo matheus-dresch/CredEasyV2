@@ -14,13 +14,13 @@ trait ApiResponse
             ], $status);
     }
 
-    public function respostaErro(string $message, int $status)
+    public function respostaErro(string $message, int $status, $data = null)
     {
         return response()
             ->json([
                 'status' => 'Erro',
                 'message' => $message,
-                'data' => null
+                'data' => $data
             ], $status);
     }
 }

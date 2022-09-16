@@ -12,6 +12,15 @@ class Parcela extends Model
     protected $table = 'parcela';
     public $timestamps = false;
 
+    protected $fillable = [
+        'valor',
+        'emprestimo_id',
+        'numero',
+        'data_vencimento'
+    ];
+
+    protected $dates = ['data_pagamento', 'data_vencimento'];
+
     public function emprestimo()
     {
         return $this->belongsTo(Emprestimo::class);

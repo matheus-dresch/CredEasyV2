@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\HasApiTokens;
 
 class Cliente extends Model implements Authenticatable
@@ -63,16 +64,5 @@ class Cliente extends Model implements Authenticatable
         return '';
     }
 
-    public function proximaParcela()
-    {
-        $parcela = Parcela::select('parcela.emprestimo_id', 'parcela.data_vencimento', 'parcela.valor')
-            ->join('emprestimo', 'parcela.emprestimo_id', 'emprestimo.id')
-            ->where('cliente_id', $this->id)
-            ->where('parcela.status', '!=', 'PAGA')
-            ->orderBy('parcela.data_vencimento')
-            ->limit(1)
-            ->first();
 
-        return $parcela;
-    }
 }

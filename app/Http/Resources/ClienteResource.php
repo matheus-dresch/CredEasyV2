@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Parcela;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ClienteResource extends JsonResource
@@ -31,28 +32,41 @@ class ClienteResource extends JsonResource
     private function calculaNumeros()
     {
         $emprestimos = $this->emprestimos;
-        $dados['qtd_emprestimos'] = count($emprestimos);
+        $dados['qtd_emprestimos'] = $emprestimos->count();
 
-        $dados['total_emprestado'] = $emprestimos->reduce(function ($acum, $item) {
-            if($item->status != "SOLICITADO") return $acum + $item->valor;
-        }) ?: 0;
+        $dados['total_emprestado'] = $emprestimos->where('status', '!=', 'SOLICITADO')
+            ->reduce(fn ($acum, $item) => $acum + $item->valor);
 
         $dados['total_pago'] = 0;
         foreach ($this->emprestimos as $emprestimo) {
-            if (! $emprestimo->parcelas()->exists()) continue;
+            if (!$emprestimo->parcelas()->exists()) continue;
 
-            $dados['total_pago'] = $emprestimo->parcelas->reduce(function($acum, $item) {
-                if ($item->status === "PAGA") return $acum + $item->valor_pago;
-            });
+            $parcelas = $emprestimo->parcelas->where('status', 'PAGA');
+            $dados['total_pago'] += $parcelas->reduce(fn ($acum, $item) => $acum + $item->valor_pago);
         }
 
         return $dados;
     }
 
-    private function outrosDados() {
-        $ultimoEmprestimo = $this->emprestimos()->first();
+    private function outrosDados()
+    {
+
+        $ultimoEmprestimo = $this->emprestimos()->orderBy('data_solicitacao', 'DESC')->first();
         $proximaParcela = $this->proximaParcela();
 
-        return ['ultimo_emprestimo' => $ultimoEmprestimo, 'proximaParcela' => $proximaParcela];
+        return ['ultimo_emprestimo' => $ultimoEmprestimo, 'proxima_parcela' => $proximaParcela];
+    }
+
+    private function proximaParcela()
+    {
+        $parcela = Parcela::select('parcela.emprestimo_id', 'parcela.data_vencimento', 'parcela.valor')
+            ->join('emprestimo', 'parcela.emprestimo_id', 'emprestimo.id')
+            ->where('cliente_id', $this->id)
+            ->where('parcela.status', '!=', 'PAGA')
+            ->orderBy('parcela.data_vencimento')
+            ->limit(1)
+            ->first();
+
+        return $parcela;
     }
 }
