@@ -1,0 +1,62 @@
+version: '3.9'
+
+services:
+  aplicativo_1:
+    image: credeasy/php-laravel:1.1
+    container_name: ce_aplicativo_1
+    networks:
+      - rede-aplicativo
+    depends_on:
+      - database
+
+  aplicativo_2:
+    image: credeasy/php-laravel:1.1
+    container_name: ce_aplicativo_2
+    networks:
+      - rede-aplicativo
+    depends_on:
+      - database
+
+  aplicativo_3:
+    image: credeasy/php-laravel:1.1
+    container_name: ce_aplicativo_3
+    networks:
+      - rede-aplicativo
+    depends_on:
+      - database
+
+  load_balancer:
+    image: credeasy/load-balancer:1
+    container_name: ce_loadbalancer
+    ports:
+      - "8000:80"
+    networks:
+      - rede-aplicativo
+
+  frontend:
+    image: credeasy/frontend:1.5
+    container_name: ce_frontend
+    ports:
+      - "6060:80"
+    networks:
+      - rede-aplicativo
+
+  database:
+    image: mysql:8
+    container_name: ce_database
+    volumes:
+      - mysql-credeasy-v2:/var/lib/mysql/
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - '3306:3306'
+    networks:
+      - rede-aplicativo
+
+networks:
+  rede-aplicativo:
+    driver: bridge
+
+volumes:
+  mysql-credeasy-v2:
+    driver: local

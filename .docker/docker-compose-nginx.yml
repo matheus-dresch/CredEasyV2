@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  app:
+    build: .
+    networks:
+      - credeasy-api-network
+    container_name: credeasy-aplicativo-api
+
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - ./:/var/www/html
+      - ./nginx/conf.d/:/etc/nginx/conf.d/
+    ports:
+      - "8082:80"
+    networks:
+      - credeasy-api-network
+    container_name: credeasy-servidor-api
+
+  mysql:
+    image: mysql:8
+    volumes:
+      - ./dbdata/:/var/lib/mysql/
+    ports:
+      - "3307:3306"
+    networks:
+      - credeasy-api-network
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    container_name: credeasy-banco-api
+
+networks:
+  credeasy-api-network:
+    driver: bridge

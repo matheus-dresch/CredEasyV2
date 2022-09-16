@@ -19,5 +19,4 @@ yarn-error.log
 /nginx
 /php
 
-docker-compose.yml
-/.docker
+/.docker/dbdata
